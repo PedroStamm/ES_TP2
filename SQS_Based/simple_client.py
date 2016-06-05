@@ -112,6 +112,12 @@ while exit_loop is False:
                 print("Job "+i['Name'])
                 for r in i['Attributes']:
                     print("\t"+r['Name']+": "+r['Value'])
+    elif user_in == "job_record_delete":
+        user_in = raw_input("Job ID\n>")
+        try:
+            sdb.delete_attributes(DomainName='jobdata', ItemName=user_in)
+        except:
+            print("Failure in deleting job entry. Does the job exist?")
     elif user_in == "worker_status":
         autoscale = boto3.client('autoscaling')
         for group in autoscale.describe_auto_scaling_groups()['AutoScalingGroups']:
