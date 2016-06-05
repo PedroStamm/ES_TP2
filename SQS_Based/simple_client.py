@@ -15,7 +15,8 @@ while exit_loop is False:
         exit_loop = True
     elif user_in == "fibonacci":
         user_in = raw_input("Number to calculate:\n>")
-        bucket.put_object(Key=datetime.datetime.now().strftime("%Y%m%d%H%M%S"), Body=user_in)
+        cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        bucket.put_object(Key=cur_date, Body=user_in)
         in_queue.send_message(
             MessageBody='Fibonacci',
             MessageAttributes={
@@ -24,7 +25,7 @@ while exit_loop is False:
                     'DataType': 'String'
                 },
                 'key': {
-                    'StringValue': datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
+                    'StringValue': cur_date,
                     'DataType': 'String'
                 }
             }
@@ -32,6 +33,7 @@ while exit_loop is False:
         print("Fibonacci job sent")
     elif user_in == "print_string":
         user_in = raw_input("String to send:\n>")
+        cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
         in_queue.send_message(
             MessageBody='PrintString',
             MessageAttributes={
@@ -40,12 +42,12 @@ while exit_loop is False:
                     'DataType': 'String'
                 },
                 'key': {
-                    'StringValue': 'TestString',
+                    'StringValue': cur_date,
                     'DataType': 'String'
                 }
             }
         )
-        bucket.put_object(Key="TestString", Body=user_in)
+        bucket.put_object(Key=cur_date, Body=user_in)
         print("Print String job sent")
     elif user_in == "get_result":
         for message in out_queue.receive_messages(MaxNumberOfMessages=10, MessageAttributeNames=['key', 'bucket']):
@@ -57,7 +59,7 @@ while exit_loop is False:
                 bucket.download_file(key, 'tmp/' + key)
                 f = open('tmp/' + key, 'r')
                 str_in = f.read()
-                print("\tID: " + key + "\nBody: " + message.body)
+                print("\tID: " + key + "\n\tBody: " + message.body)
                 print("\tFibonacci Number: " + str_in)
                 message.delete()
                 for object in bucket.objects.filter(Prefix=key):
@@ -70,7 +72,7 @@ while exit_loop is False:
                 bucket.download_file(key, 'tmp/' + key)
                 f = open('tmp/' + key, 'r')
                 str_in = f.read()
-                print("\tID: " + key + "\nBody: " + message.body)
+                print("\tID: " + key + "\n\tBody: " + message.body)
                 print("\tString received: " + str_in)
                 message.delete()
                 for object in bucket.objects.filter(Prefix=key):
@@ -93,4 +95,4 @@ while exit_loop is False:
                 print("\tInstance ID: "+instance['InstanceId'])
                 print("\t\tZone: "+instance['AvailabilityZone'])
                 print("\t\tStatus: "+instance['HealthStatus'])
-
+print("Closing Client")
