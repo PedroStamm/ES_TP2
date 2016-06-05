@@ -47,6 +47,38 @@ while exit_loop is False:
         )
         bucket.put_object(Key="TestString", Body=user_in)
         print("Print String job sent")
+    elif user_in == "get_result":
+        for message in out_queue.receive_messages(MaxNumberOfMessages=10, MessageAttributeNames=['key', 'bucket']):
+            print("Got Job Result")
+            if message.body == 'Fibonacci_res':
+                key = message.message_attributes.get('key').get('StringValue')
+                bucket_name = message.message_attributes.get('bucket').get('StringValue')
+                bucket = s3.Bucket(bucket_name)
+                bucket.download_file(key, 'tmp/' + key)
+                f = open('tmp/' + key, 'r')
+                str_in = f.read()
+                print("\tID: " + key + "\nBody: " + message.body)
+                print("\tFibonacci Number: " + str_in)
+                message.delete()
+                for object in bucket.objects.filter(Prefix=key):
+                    if object.key == key:
+                        object.delete()
+            elif message.body == 'PrintString_res':
+                key = message.message_attributes.get('key').get('StringValue')
+                bucket_name = message.message_attributes.get('bucket').get('StringValue')
+                bucket = s3.Bucket(bucket_name)
+                bucket.download_file(key, 'tmp/' + key)
+                f = open('tmp/' + key, 'r')
+                str_in = f.read()
+                print("\tID: " + key + "\nBody: " + message.body)
+                print("\tString received: " + str_in)
+                message.delete()
+                for object in bucket.objects.filter(Prefix=key):
+                    if object.key == key:
+                        object.delete()
+            else:
+                print("Got Message: " + message.body)
+                message.delete()
     elif user_in == "worker_status":
         autoscale = boto3.client('autoscaling')
         for group in autoscale.describe_auto_scaling_groups()['AutoScalingGroups']:
