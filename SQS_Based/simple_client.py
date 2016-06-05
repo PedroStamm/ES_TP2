@@ -7,6 +7,8 @@ out_queue = sqs.get_queue_by_name(QueueName='out_queue')
 s3 = boto3.resource('s3')
 bucket = s3.Bucket("pstammjobdata")
 
+sdb = boto3.client('sdb')
+
 exit_loop = False
 
 while exit_loop is False:
@@ -31,6 +33,18 @@ while exit_loop is False:
             }
         )
         print("Fibonacci job sent")
+        sdb.put_attributes(DomainName='jobdata',
+                           ItemName=cur_date,
+                           Attributes=[
+                               {
+                                   'Name': 'JobDesignation',
+                                   'Value': 'Fibonacci'
+                               },
+                               {
+                                   'Name': 'JobStatus',
+                                   'Value': 'Pending'
+                               }
+                           ])
     elif user_in == "print_string":
         user_in = raw_input("String to send:\n>")
         cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
@@ -49,6 +63,18 @@ while exit_loop is False:
         )
         bucket.put_object(Key=cur_date, Body=user_in)
         print("Print String job sent")
+        sdb.put_attributes(DomainName='jobdata',
+                           ItemName=cur_date,
+                           Attributes=[
+                               {
+                                   'Name': 'JobDesignation',
+                                   'Value': 'PrintString'
+                               },
+                               {
+                                   'Name': 'JobStatus',
+                                   'Value': 'Pending'
+                               }
+                           ])
     elif user_in == "get_result":
         for message in out_queue.receive_messages(MaxNumberOfMessages=10, MessageAttributeNames=['key', 'bucket']):
             print("Got Job Result")
