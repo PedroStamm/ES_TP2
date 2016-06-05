@@ -1,4 +1,5 @@
 import boto3
+import datetime
 from botocore.client import Config
 
 botoConfig = Config(connect_timeout=50, read_timeout=70)
@@ -25,18 +26,39 @@ while True:
     if 'taskToken' not in task:
         print("Poll time out")
 
-    else:
+    elif task['activityType']['name'] == 'CalculateFib':
         print("Got Fibonacci job")
         key = task['input']
-        #"/home/ec2-user/" +
-        bucket.download_file("swf/"+key,  key)
-        f = open( key, 'r')
+        bucket.download_file("swf/" + key, "/home/ec2-user/" + key)
+        f = open("/home/ec2-user/" + key, 'r')
         read_str = f.read()
         n = int(read_str)
         res = fibonacci(n)
         bucket.put_object(Key=key + "_out", Body=str(res))
         swf.respond_activity_task_completed(
             taskToken=task['taskToken'],
-            result='success'
+            result=str(res)
         )
+        for object in bucket.objects.filter(Prefix="swf/"+key):
+            if object.key == key:
+                object.delete()
         print("Fibonacci job complete")
+    elif task['activityType']['name'] == 'StoreInputS3':
+        print("Got store input job")
+        value = task['input']
+        cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        bucket.put_object(Key="swf/" + cur_date, Body=value)
+        swf.respond_activity_task_completed(
+            taskToken=task['taskToken'],
+            result=str(res)
+        )
+    elif task['activityType']['name'] == 'StoreOutputS3':
+        print("Got store output job")
+        value = task['input']
+        cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+        bucket.put_object(Key="swf_out/" + cur_date, Body=value)
+        swf.respond_activity_task_completed(
+            taskToken=task['taskToken'],
+            result=str(res)
+        )
+
