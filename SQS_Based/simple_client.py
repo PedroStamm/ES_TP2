@@ -49,16 +49,16 @@ while exit_loop is False:
         print("Print String job sent")
     elif user_in == "worker_status":
         autoscale = boto3.client('autoscaling')
-        for group in autoscale.AutoScalingGroups:
-            print("Group Name: "+group.AutoScalingGroupName)
-            print("Launch Configuration: "+group.LaunchConfigurationName)
-            print("Min Size: "+group.MinSize)
-            print("Max Size: "+group.MaxSize)
-            print("Initial Instances: "+group.DesiredCapacity)
-            print("Created in: "+group.CreatedTime.strftime("%d/%m/%Y"))
+        for group in autoscale.describe_auto_scaling_groups()['AutoScalingGroups']:
+            print("Group Name: "+group['AutoScalingGroupName'])
+            print("Launch Configuration: "+group['LaunchConfigurationName'])
+            print("Min Size: "+str(group['MinSize']))
+            print("Max Size: "+str(group['MaxSize']))
+            print("Initial Instances: "+str(group['DesiredCapacity']))
+            print("Created in: "+group['CreatedTime'].strftime("%d/%m/%Y"))
             print("Instances: ")
-            for instance in group.Instances:
-                print("Instance ID: "+instance.InstanceID)
-                print("Zone: "+instance.AvailabilityZone)
-                print("Status: "+instance.HealthStatus)
+            for instance in group['Instances']:
+                print("\tInstance ID: "+instance['InstanceId'])
+                print("\t\tZone: "+instance['AvailabilityZone'])
+                print("\t\tStatus: "+instance['HealthStatus'])
 
