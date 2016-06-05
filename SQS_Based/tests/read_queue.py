@@ -1,3 +1,12 @@
+# coding=utf-8
+"""
+Made by Pedro Stamm
+For Services Engineering Course
+Departamento de Engenharia Informática
+Faculdade de Ciências de Tecnologia
+Universidade de Coimbra
+"""
+
 import boto3
 
 sqs = boto3.resource('sqs')
