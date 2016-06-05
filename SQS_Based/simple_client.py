@@ -105,6 +105,13 @@ while exit_loop is False:
             else:
                 print("Got Message: " + message.body)
                 message.delete()
+    elif user_in == "job_status":
+        res = sdb.select(SelectExpression='select * from jobdata')
+        if 'Items' in res:
+            for i in res['Items']:
+                print("Job "+i['Name'])
+                for r in i['Attributes']:
+                    print("\t"+r['Name']+": "+r['Value'])
     elif user_in == "worker_status":
         autoscale = boto3.client('autoscaling')
         for group in autoscale.describe_auto_scaling_groups()['AutoScalingGroups']:
