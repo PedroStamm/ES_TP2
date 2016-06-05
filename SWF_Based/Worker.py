@@ -28,8 +28,9 @@ while True:
     else:
         print("Got Fibonacci job")
         key = task['input']
-        bucket.download_file(key, "/home/ec2-user/" + key)
-        f = open("/home/ec2-user/" + key, 'r')
+        #"/home/ec2-user/" +
+        bucket.download_file("swf/"+key,  key)
+        f = open( key, 'r')
         read_str = f.read()
         n = int(read_str)
         res = fibonacci(n)

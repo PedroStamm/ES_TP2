@@ -14,10 +14,12 @@ while True:
         identity='decider-1',
         reverseOrder=False
     )
+    print("Out of polling")
 
     if 'taskToken' not in newTask:
         print "Poll timed out"
     elif 'events' in newTask:
+        print"Got a thing"
         eventHistory = [evt for evt in newTask['events'] if not evt['eventType'].startswith('Decision')]
         lastEvent = eventHistory[-1]
 
@@ -33,7 +35,7 @@ while True:
                         'scheduleActivityTaskDecisionAttributes': {
                             'activityType': {
                                 'name': "CalculateFib",  # string
-                                'version': "1.0"  # string
+                                'version': "1.1"  # string
                             },
                             'activityId': 'activityid-'+cur_date,
                             'input': cur_date,

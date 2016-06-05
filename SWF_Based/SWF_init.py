@@ -1,3 +1,4 @@
+import datetime
 import boto3
 from botocore.exceptions import ClientError
 
@@ -30,7 +31,7 @@ try:
     swf.register_activity_type(
         domain="ESSWF",
         name="CalculateFib",
-        version="1.0",  # string
+        version="1.1",  # string
         description="Makes a worker calculate the number",
         defaultTaskStartToCloseTimeout="NONE",
         defaultTaskList={"name": "FibTaskList"}  # TASKLIST is a string
@@ -39,9 +40,10 @@ try:
 except ClientError as e:
     print "Activity already exists: ", e.response.get("Error", {}).get("Code")
 
+cur_date = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
 response = swf.start_workflow_execution(
   domain="ESSWF", # string,
-  workflowId='test-1001',
+  workflowId=cur_date,
   workflowType={
     "name": "Fibonacci",# string
     "version": "1.0" # string
