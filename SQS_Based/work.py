@@ -30,6 +30,15 @@ while exit is False:
             f = open("/home/ec2-user/" + key, 'r')
             read_str = f.read()
             n = int(read_str)
+            try:
+                sdb.delete_attributes(DomainName='jobdata',
+                                      ItemName=key,
+                                      Attributes=[{
+                                           'Name': 'JobStatus',
+                                           'Value': 'Pending'
+                                       }])
+            except:
+                print "Remove broke"
             sdb.put_attributes(DomainName='jobdata',
                                ItemName=key,
                                Attributes=[
@@ -62,6 +71,15 @@ while exit is False:
                 if object.key == key:
                     object.delete()
             print("Fibonacci job complete")
+            try:
+                sdb.delete_attributes(DomainName='jobdata',
+                                      ItemName=key,
+                                      Attributes=[{
+                                           'Name': 'JobStatus',
+                                           'Value': 'Processing'
+                                       }])
+            except:
+                print "Remove broke"
             sdb.put_attributes(DomainName='jobdata',
                                ItemName=key,
                                Attributes=[
@@ -77,6 +95,15 @@ while exit is False:
         elif message.body == 'PrintString':
             print("Got Print job")
             key = message.message_attributes.get('key').get('StringValue')
+            try:
+                sdb.delete_attributes(DomainName='jobdata',
+                                      ItemName=key,
+                                      Attributes=[{
+                                           'Name': 'JobStatus',
+                                           'Value': 'Pending'
+                                       }])
+            except:
+                print "Remove broke"
             sdb.put_attributes(DomainName='jobdata',
                                ItemName=key,
                                Attributes=[
@@ -111,6 +138,15 @@ while exit is False:
                 if object.key == key:
                     object.delete()
             print("Print job complete")
+            try:
+                sdb.delete_attributes(DomainName='jobdata',
+                                      ItemName=key,
+                                      Attributes=[{
+                                           'Name': 'JobStatus',
+                                           'Value': 'Processing'
+                                       }])
+            except:
+                print "Remove broke"
             sdb.put_attributes(DomainName='jobdata',
                                ItemName=key,
                                Attributes=[

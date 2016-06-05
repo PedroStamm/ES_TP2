@@ -10,7 +10,8 @@ except:
     queue = sqs.create_queue(QueueName='in_queue', Attributes={'DelaySeconds': '5'})
 """
 sdb = boto3.client('sdb')
-#sdb.create_domain(DomainName='jobdata')
+#sdb.delete_domain(DomainName='jobdata')
+sdb.create_domain(DomainName='jobdata')
 """
 sdb.put_attributes(DomainName='jobdata',
                    ItemName='jobdata_id2',
