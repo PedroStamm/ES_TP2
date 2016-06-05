@@ -15,7 +15,7 @@ while exit_loop is False:
         exit_loop = True
     elif user_in == "fibonacci":
         user_in = raw_input("Number to calculate:\n>")
-        bucket.put_object(Key=datetime.datetime.now().strftime("%Y%m%d%H%M%S"), Body=int(user_in))
+        bucket.put_object(Key=datetime.datetime.now().strftime("%Y%m%d%H%M%S"), Body=user_in)
         in_queue.send_message(
             MessageBody='Fibonacci',
             MessageAttributes={
