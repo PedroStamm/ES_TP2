@@ -81,28 +81,26 @@ while exit_loop is False:
             if message.body == 'Fibonacci_res':
                 key = message.message_attributes.get('key').get('StringValue')
                 bucket_name = message.message_attributes.get('bucket').get('StringValue')
-                bucket = s3.Bucket(bucket_name)
-                bucket.download_file(key, 'tmp/' + key)
-                f = open('tmp/' + key, 'r')
+                bucket.download_file(bucket_name, 'tmp/' + bucket_name)
+                f = open('tmp/' + bucket_name, 'r')
                 str_in = f.read()
                 print("\tID: " + key + "\n\tBody: " + message.body)
                 print("\tFibonacci Number: " + str_in)
                 message.delete()
-                for object in bucket.objects.filter(Prefix=key):
-                    if object.key == key:
+                for object in bucket.objects.filter(Prefix=bucket_name):
+                    if object.key == bucket_name:
                         object.delete()
             elif message.body == 'PrintString_res':
                 key = message.message_attributes.get('key').get('StringValue')
                 bucket_name = message.message_attributes.get('bucket').get('StringValue')
-                bucket = s3.Bucket(bucket_name)
-                bucket.download_file(key, 'tmp/' + key)
-                f = open('tmp/' + key, 'r')
+                bucket.download_file(bucket_name, 'tmp/' + bucket_name)
+                f = open('tmp/' + bucket_name, 'r')
                 str_in = f.read()
                 print("\tID: " + key + "\n\tBody: " + message.body)
                 print("\tString received: " + str_in)
                 message.delete()
-                for object in bucket.objects.filter(Prefix=key):
-                    if object.key == key:
+                for object in bucket.objects.filter(Prefix=bucket_name):
+                    if object.key == bucket_name:
                         object.delete()
             else:
                 print("Got Message: " + message.body)

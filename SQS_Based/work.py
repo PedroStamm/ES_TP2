@@ -47,11 +47,11 @@ while exit is False:
                 MessageBody=message.body + "_res",
                 MessageAttributes={
                     'bucket': {
-                        'StringValue': 'pstammjobdata',
+                        'StringValue': key+"_out",
                         'DataType': 'String'
                     },
                     'key': {
-                        'StringValue': key + "_out",
+                        'StringValue': key,
                         'DataType': 'String'
                     }
                 }
@@ -96,11 +96,11 @@ while exit is False:
                 MessageBody=message.body + "_res",
                 MessageAttributes={
                     'bucket': {
-                        'StringValue': 'pstammjobdata',
+                        'StringValue': key+"_out",
                         'DataType': 'String'
                     },
                     'key': {
-                        'StringValue': key + "_out",
+                        'StringValue': key,
                         'DataType': 'String'
                     }
                 }
