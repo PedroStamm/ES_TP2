@@ -9,8 +9,7 @@ try:
 except:
     queue = sqs.create_queue(QueueName='in_queue', Attributes={'DelaySeconds': '5'})
 
-
-#queue.send_message(MessageBody='exit')
+# queue.send_message(MessageBody='exit')
 """
 queue.send_message(
     MessageBody='PrintString',
@@ -31,14 +30,14 @@ bucket.put_object(Key="TestString", Body="This String")
 queue.send_message(
     MessageBody='Fibonacci',
     MessageAttributes={
-        'bucket':{
+        'bucket': {
             'StringValue': 'pstammjobdata',
             'DataType': 'String'
         },
-        'key':{
+        'key': {
             'StringValue': datetime.datetime.now().strftime("%Y%m%d%H%M%S"),
             'DataType': 'String'
-       }
+        }
     }
 )
 bucket.put_object(Key=datetime.datetime.now().strftime("%Y%m%d%H%M%S"), Body="25")
