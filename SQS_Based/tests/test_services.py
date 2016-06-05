@@ -11,7 +11,7 @@ except:
 """
 sdb = boto3.client('sdb')
 #sdb.delete_domain(DomainName='jobdata')
-sdb.create_domain(DomainName='jobdata')
+#sdb.create_domain(DomainName='jobdata')
 """
 sdb.put_attributes(DomainName='jobdata',
                    ItemName='jobdata_id2',
