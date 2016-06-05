@@ -38,3 +38,18 @@ try:
     print "Worker created!"
 except ClientError as e:
     print "Activity already exists: ", e.response.get("Error", {}).get("Code")
+
+response = swf.start_workflow_execution(
+  domain="ESSWF", # string,
+  workflowId='test-1001',
+  workflowType={
+    "name": "Fibonacci",# string
+    "version": "1.0" # string
+  },
+  taskList={
+      'name': "FibTaskList"
+  },
+  input='5'
+)
+
+print "Workflow requested: ", response
