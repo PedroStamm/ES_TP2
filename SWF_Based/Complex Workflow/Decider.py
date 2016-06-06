@@ -54,7 +54,7 @@ while True:
 
         elif lastEvent['eventType'] == 'ActivityTaskCompleted':
             prev_activityTask = lastEvent
-            for ev in eventHistory:
+            for ev in reversed(eventHistory):
                 if ev['eventType'] == 'ActivityTaskScheduled':
                     prev_activityTask = ev
                     break
